@@ -13,14 +13,6 @@ import numpy as np
 import pybaseball as pyb
 import matplotlib.pyplot as plt
 import seaborn as sns
-import os
-
-# Set the working directory to the desired path
-os.chdir(r'C:\Users\jakev\OneDrive\Documents\FlashStats\MLB Pitching Dashboard')
-
-# Verify the change
-print("Current working directory:", os.getcwd())
-
 
 # Plotting Preferences
 
