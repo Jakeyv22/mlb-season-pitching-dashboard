@@ -1211,8 +1211,6 @@ def update_dashboard_image(pitcher_id):
     # Fetch and return the updated image for the selected pitcher
     return get_dashboard_image(pitcher_id, stats)
 
-# Run the app
-if __name__ == '__main__':
-    app.run(debug=True)
-
-
+if __name__ == "__main__":
+    app.run_server(debug=True, host="0.0.0.0", port=10000)
+    
