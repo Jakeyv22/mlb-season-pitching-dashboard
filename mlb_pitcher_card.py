@@ -1,24 +1,20 @@
-#!/usr/bin/env python
-# coding: utf-8
-
+# %% [markdown]
 # # MLB Pitcher Player Cards
 
+# %% [markdown]
 # Import Packages
 
-# In[69]:
-
-
+# %%
 import pandas as pd
 import numpy as np
 import pybaseball as pyb
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+# %% [markdown]
 # Plotting Preferences
 
-# In[70]:
-
-
+# %%
 # Define font properties for general text
 font_properties = {'family': 'DejaVu Sans', 'size': 12}
 
@@ -42,12 +38,10 @@ import matplotlib as mpl
 # Set the resolution of the figures to 300 DPI
 mpl.rcParams['figure.dpi'] = 300
 
-
+# %% [markdown]
 # Color Palette
 
-# In[71]:
-
-
+# %%
 ### PITCH COLORS ###
 pitch_colors = {
     ## Fastballs ##
@@ -110,21 +104,18 @@ ax.invert_yaxis()
 ax.set_title('Pitch Colors')
 
 
+# %% [markdown]
 # Player Pitch Data
 
-# In[72]:
-
-
+# %%
 pitcher_id = 687922
 df_pyb = pyb.statcast_pitcher('2025-03-27', '2025-04-27', pitcher_id)
 df_pyb.head()
 
-
+# %% [markdown]
 # Data Processing
 
-# In[73]:
-
-
+# %%
 def df_processing(df_pyb: pd.DataFrame):
     df = df_pyb.copy()
     # Define the codes for different types of swings and whiffs
@@ -146,20 +137,16 @@ def df_processing(df_pyb: pd.DataFrame):
 
 df = df_processing(df_pyb)
 
-
+# %% [markdown]
 # 2025 League Average Metrics
 
-# In[74]:
-
-
+# %%
 df_statcast_group = pd.read_csv('statcast_2025_grouped.csv')
 
-
+# %% [markdown]
 # Player Headshot
 
-# In[75]:
-
-
+# %%
 from PIL import Image
 import requests
 from io import BytesIO
@@ -191,12 +178,10 @@ def player_headshot(pitcher_id: str, ax: plt.Axes):
 # Call the player_headshot function with the pitcher ID and current axis
 player_headshot(pitcher_id=pitcher_id, ax=plt.subplots(figsize=(1, 1))[1])
 
-
+# %% [markdown]
 # Player Bio
 
-# In[76]:
-
-
+# %%
 def player_bio(pitcher_id: str, ax: plt.Axes):
     # Construct the URL to fetch player data
     url = f"https://statsapi.mlb.com/api/v1/people?personIds={pitcher_id}&hydrate=currentTeam"
@@ -223,12 +208,10 @@ def player_bio(pitcher_id: str, ax: plt.Axes):
 # Call the player_bio function with the pitcher ID and a new axis of size 10x2
 player_bio(pitcher_id, ax=plt.subplots(figsize=(20, 4))[1])
 
-
+# %% [markdown]
 # MLB/MILB Logos
 
-# In[77]:
-
-
+# %%
 # List of MLB and MILB teams and their corresponding logo URLs
 teams = [
     # MLB
@@ -275,7 +258,7 @@ teams = [
     {"team": "IOW", "logo_url": "https://static.wikia.nocookie.net/minor-league-baseball/images/e/e2/Iowa_Cubs.svg/revision/latest/smart/width/250/height/250?cb=20240522012105"},
     {"team": "JAX", "logo_url": "https://static.wikia.nocookie.net/minor-league-baseball/images/2/2b/Jacksonville_Jumbo_Shrimp.svg/revision/latest/smart/width/250/height/250?cb=20240522012119"},
     {"team": "LV", "logo_url": "https://static.wikia.nocookie.net/minor-league-baseball/images/b/ba/Las_Vegas_Aviators.svg/revision/latest/smart/width/250/height/250?cb=20240522035252"},
-    {"team": "LHV", "logo_url": "https://static.wikia.nocookie.net/minor-league-baseball/images/3/30/Lehigh_Valley_IronPigs.svg/revision/latest/smart/width/250/height/250?cb=20240522012131"},
+    {"team": "LEH", "logo_url": "https://static.wikia.nocookie.net/minor-league-baseball/images/3/30/Lehigh_Valley_IronPigs.svg/revision/latest/smart/width/250/height/250?cb=20240522012131"},
     {"team": "LOU", "logo_url": "https://static.wikia.nocookie.net/minor-league-baseball/images/d/d1/Louisville_Bats.svg/revision/latest/smart/width/250/height/250?cb=20240522012251"},
     {"team": "MEM", "logo_url": "https://static.wikia.nocookie.net/minor-league-baseball/images/7/75/Memphis_Redbirds.svg/revision/latest/smart/width/250/height/250?cb=20240522012306"},
     {"team": "NAS", "logo_url": "https://static.wikia.nocookie.net/minor-league-baseball/images/0/02/Nashville_Sounds.svg/revision/latest/smart/width/250/height/250?cb=20240522012505"},
@@ -300,18 +283,13 @@ teams = [
 df_image = pd.DataFrame(teams)
 image_dict = df_image.set_index('team')['logo_url'].to_dict()
 
-
-# In[78]:
-
-
+# %%
 pitcher_id = 677161
 
-
+# %% [markdown]
 # Plot Logo
 
-# In[79]:
-
-
+# %%
 def plot_logo(pitcher_id: str, ax: plt.Axes):
     try:
         # Get player info and current team
@@ -345,12 +323,10 @@ def plot_logo(pitcher_id: str, ax: plt.Axes):
 
 plot_logo(pitcher_id, ax=plt.subplots(figsize=(1, 1))[1])
 
-
+# %% [markdown]
 # Pitch Velocity KDE
 
-# In[80]:
-
-
+# %%
 import math
 import matplotlib.gridspec as gridspec
 
@@ -451,20 +427,16 @@ velocity_kdes(df=df,
               fig=fig,
               df_statcast_group=df_statcast_group)
 
-
+# %% [markdown]
 # Short Form Pitch Movement
 
+# %% [markdown]
 # Pitch Movement WITH LEAGUE AVERAGES
 
-# In[81]:
-
-
+# %%
 df_pitch_movement = pd.read_csv('statcast_2025_pitch_movement.csv')
 
-
-# In[82]:
-
-
+# %%
 from matplotlib.ticker import FuncFormatter
 from matplotlib.patches import Ellipse
 import matplotlib.transforms as transforms
@@ -628,12 +600,10 @@ def break_plot(df: pd.DataFrame, ax: plt.Axes, df_statcast_group: pd.DataFrame =
 
 break_plot(df=df, ax=plt.subplots(figsize=(6, 6))[1], df_statcast_group=df_pitch_movement)
 
-
+# %% [markdown]
 # Season Pitching Summary
 
-# In[83]:
-
-
+# %%
 def fangraphs_pitching_leaderboards(season:int):
     url = f"https://www.fangraphs.com/api/leaders/major-league/data?age=&pos=all&stats=pit&lg=all&season={season}&season1={season}&ind=0&qual=0&type=8&month=0&pageitems=500000"
     data = requests.get(url).json()
@@ -643,10 +613,7 @@ def fangraphs_pitching_leaderboards(season:int):
 df_fangraphs = fangraphs_pitching_leaderboards(season = 2025)
 df_fangraphs.head()
 
-
-# In[84]:
-
-
+# %%
 ### FANGRAPHS STATS DICT ###
 fangraphs_stats_dict = {'IP':{'table_header':'$\\bf{IP}$','format':'.1f',} ,
  'TBF':{'table_header':'$\\bf{PA}$','format':'.0f',} ,
@@ -681,10 +648,7 @@ fangraphs_stats_dict = {'IP':{'table_header':'$\\bf{IP}$','format':'.1f',} ,
  'G':{'table_header':'$\\bf{G}$','format':'.0f',},
  'GS':{'table_header':'$\\bf{GS}$','format':'.0f',} }
 
-
-# In[85]:
-
-
+# %%
 def fangraphs_pitcher_stats(pitcher_id: int, ax: plt.Axes,stats:list, season:int,fontsize:int=20):
     df_fangraphs = fangraphs_pitching_leaderboards(season = season)
 
@@ -711,17 +675,15 @@ fangraphs_pitcher_stats(pitcher_id = pitcher_id,
                         stats = stats,
                         season = 2025)
 
-
+# %% [markdown]
 # Pitcher Percentile Rankings
 
-# In[86]:
-
-
+# %%
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import matplotlib.colors as mcolors
 
-def plot_percentile_rankings_by_pitcher(df_fangraphs, pitcher_id, ax=None, min_PA=25):
+def plot_percentile_rankings_by_pitcher(df_fangraphs, pitcher_id, ax=None):
     label_map = {
         'xERA': 'xERA',
         'EV': 'Avg Exit Velocity',
@@ -737,29 +699,27 @@ def plot_percentile_rankings_by_pitcher(df_fangraphs, pitcher_id, ax=None, min_P
     # Find the pitcher by pitcher_id (xMLBAMID)
     pitcher_row = df_fangraphs[df_fangraphs['xMLBAMID'] == pitcher_id].iloc[0]
 
-    # Filter dataset to pitchers meeting the minimum PA threshold
-    reliable_stats = df_fangraphs[df_fangraphs['TBF'] >= min_PA]
-
-    # Calculate percentiles only among reliable pitchers
+    # Calculate percentiles
     percentiles = {}
     for col in label_map.keys():
-        if col not in df_fangraphs.columns:
-            raise ValueError(f"Missing column '{col}' in advanced_stats.")
-        percentiles[col] = (reliable_stats[col] < pitcher_row[col]).mean() * 100
+        percentiles[col] = (df_fangraphs[col] < pitcher_row[col]).mean() * 100
 
-    # Reverse metrics where lower is better
+    # Reverse metrics for which lower is better
     reverse_metrics = ['xERA', 'EV', 'Barrel%', 'HardHit%', 'BB%']
     for metric in reverse_metrics:
-        if metric in percentiles:
-            percentiles[metric] = 100 - percentiles[metric]
+        percentiles[metric] = 100 - percentiles[metric]
 
     # Prepare data for plotting
     plot_data = pd.DataFrame({
         'Metric': [label_map[k] for k in label_map],
         'Percentile': [percentiles[k] for k in label_map],
-        'Value': [pitcher_row[k] * 100 if '%' in k else pitcher_row[k] for k in label_map]
+        'Value': [
+            round(pitcher_row[k] * 100, 1) if '%' in k else round(pitcher_row[k], 2)
+            for k in label_map
+        ]
     })
 
+    # Ensure the DataFrame is ordered by label_map
     plot_data['Metric'] = pd.Categorical(
         plot_data['Metric'],
         categories=[label_map[k] for k in label_map],
@@ -767,72 +727,59 @@ def plot_percentile_rankings_by_pitcher(df_fangraphs, pitcher_id, ax=None, min_P
     )
     plot_data = plot_data.sort_values('Metric', ascending=False)
 
+    # Normalize the percentiles for colormap
     norm = mcolors.Normalize(vmin=0, vmax=100)
     cmap = plt.get_cmap("coolwarm")
 
+    # If no axis is passed, create a new figure and axis
     if ax is None:
-        fig, ax = plt.subplots(figsize=(12, 7))
+        fig, ax = plt.subplots(figsize=(12, 7))  # Adjusted figsize to avoid squishing
 
-    # Determine if this pitcher meets the PA threshold
-    meets_min_pa = pitcher_row['TBF'] >= min_PA
-
-    for _, row in plot_data.iterrows():
-        color = cmap(norm(row['Percentile'])) if meets_min_pa else 'lightgray'
+    # Plotting the percentile rankings
+    for i, row in plot_data.iterrows():
+        color = cmap(norm(row['Percentile']))
         ax.barh(row['Metric'], row['Percentile'], color=color)
 
-        if meets_min_pa:
-            if row['Percentile'] > 90:
-                percentile_x = row['Percentile'] - 5
-                label_color = 'white'
-                ha = 'right'
-            else:
-                percentile_x = row['Percentile'] + 1
-                label_color = 'black'
-                ha = 'left'
+        # Adjust the placement of the percentile text
+        if row['Percentile'] > 90:
+            percentile_x = row['Percentile'] - 5
+            label_color = 'white'
+            ha = 'right'
         else:
-            if row['Percentile'] > 90:
-                percentile_x = row['Percentile'] - 5
-                label_color = 'black'
-                ha = 'right'
-            else:
-                percentile_x = row['Percentile'] + 1
-                label_color = 'dimgray'
-                ha = 'left'
+            percentile_x = row['Percentile'] + 1
+            label_color = 'black'
+            ha = 'left'
 
         ax.text(percentile_x, row['Metric'], f"{int(row['Percentile'])}",
-                va='center', ha=ha, color=label_color)
-        
-        if row['Metric'] == "xERA":
-            value_label = f"{row['Value']:.2f}"
-        else:
-            value_label = f"{row['Value']:.1f}"
+        va='center', ha=ha, color=label_color)
 
-        ax.text(105, row['Metric'], value_label, va='center', ha='left', color='black')
+        # Handle special formatting for xERA
+        value_label = f"{row['Value']:.2f}" if row['Metric'] == "xERA" else f"{row['Value']:.1f}"
+        ax.text(105, row['Metric'], value_label, va='center', ha='left')
 
+    # Decorations
     ax.axvline(33, color='lightgray', linestyle='--')
     ax.axvline(67, color='lightgray', linestyle='--')
-    ax.set_title("Percentile Rankings", fontsize=20, pad=25)
+    ax.set_title("Percentile Rankings (Fangraphs)", fontsize=20)
     ax.set_xlabel("Percentile")
     ax.spines['right'].set_visible(False)
-    ax.set_xlim(0, 110)
+    ax.set_xlim(0, 100)
 
-    if not meets_min_pa:
-        ax.text(0.5, 1.02, f"Note: Grayed out — fewer than {min_PA} PA", transform=ax.transAxes,
-                ha='center', fontsize=11, style='italic', color='dimgray')
-
+    # Adjust layout for a better fit (important for tight layouts)
     if ax is None:
         plt.tight_layout()
+        plt.subplots_adjust(left=0.05, right=0.95, top=0.95, bottom=0.05)  # Fine-tuned margins
         plt.show()
 
-pitcher_id = 808967
-plot_percentile_rankings_by_pitcher(df_fangraphs, pitcher_id)
+# Example of standalone usage:
+pitcher_id = 668881  # example pitcher ID
+plot_percentile_rankings_by_pitcher(df_fangraphs, pitcher_id)  # Standalone call
 
 
+# %% [markdown]
 # Pitch Metric Summary
 
-# In[87]:
-
-
+# %%
 def df_grouping(df: pd.DataFrame):
     # Group the DataFrame by pitch type and aggregate various statistics
     df_group = df.groupby(['pitch_type']).agg(
@@ -906,10 +853,7 @@ def df_grouping(df: pd.DataFrame):
 
     return df_plot, color_list
 
-
-# In[88]:
-
-
+# %%
 pitch_stats_dict = {
     'pitch': {'table_header': '$\\bf{Count}$', 'format': '.0f'},
     'release_speed': {'table_header': '$\\bf{Velocity}$', 'format': '.1f'},
@@ -944,10 +888,7 @@ table_columns = [ 'pitch_description',
             'xwobacon',
             ]
 
-
-# In[89]:
-
-
+# %%
 def plot_pitch_format(df: pd.DataFrame):
     # Create a DataFrame for the summary row with aggregated statistics for all pitches
     df_group = df[table_columns].fillna('—')
@@ -961,10 +902,7 @@ def plot_pitch_format(df: pd.DataFrame):
             df_group[column] = df_group[column].apply(lambda x: format(x, props['format']) if isinstance(x, (int, float)) else x)
     return df_group
 
-
-# In[90]:
-
-
+# %%
 import matplotlib
 import matplotlib.colors as mcolors
 import pandas as pd
@@ -1018,10 +956,7 @@ def get_cell_colouts(df_group: pd.DataFrame,
         color_list_df.append(color_list_df_inner)
     return color_list_df
 
-
-# In[91]:
-
-
+# %%
 def pitch_table(df: pd.DataFrame, ax: plt.Axes,fontsize:int=20):
     df_group, color_list = df_grouping(df)
     color_list_df = get_cell_colouts(df_group, df_statcast_group, color_stats, cmap_sum, cmap_sum_r)
@@ -1067,15 +1002,10 @@ def pitch_table(df: pd.DataFrame, ax: plt.Axes,fontsize:int=20):
 
 pitch_table(df = df, ax = plt.subplots(figsize=(25, 8))[1])
 
-
-# In[92]:
-
-
-pyb.playerid_lookup('mcgough', 'scott')
-
-
+# %% [markdown]
 # Generating the Pitching Summary
 
+# %%
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
 
@@ -1139,22 +1069,124 @@ def pitching_dashboard(pitcher_id: str, df: pd.DataFrame, stats: list):
     return fig
 
 
-df_chadwick = pyb.chadwick_register()
-import io
-import base64
-from dash import Dash, html, dcc, Output, Input
 
-# Load people data for dropdown (from Chadwick dataset)
+# %%
+df_chadwick = pyb.chadwick_register()
+
+# %%
 df_chadwick_2025 = df_chadwick[df_chadwick['mlb_played_last'] == 2025]
 df_chadwick_2025 = df_chadwick_2025[df_chadwick_2025['key_mlbam'].notna() & (df_chadwick_2025['key_mlbam'] > 0)]
 df_chadwick_2025['full_name'] = df_chadwick_2025['name_first'].fillna('') + ' ' + df_chadwick_2025['name_last'].fillna('')
 
-# Sort the DataFrame by last name
-df_chadwick_2025 = df_chadwick_2025.sort_values('name_last')
+# %%
+def enrich_chadwick(df, batch_size=200):
+    df = df.copy()
+    df['team'] = 'Unknown'
+    df['position'] = 'Unknown'
+    df['team_level'] = 'Unknown'
 
-dropdown_options = [
+    # Step 1: Batch-fetch person info (position and currentTeam ID)
+    valid_ids = df['key_mlbam'].dropna().astype(int).tolist()
+    n_batches = math.ceil(len(valid_ids) / batch_size)
+
+    team_ids = set()
+    person_team_map = {}
+
+    for i in range(n_batches):
+        batch_ids = valid_ids[i * batch_size:(i + 1) * batch_size]
+        ids_str = ",".join(map(str, batch_ids))
+
+        try:
+            url = f"https://statsapi.mlb.com/api/v1/people?personIds={ids_str}&hydrate=currentTeam"
+            response = requests.get(url, timeout=5)
+            data = response.json()
+
+            for person in data.get('people', []):
+                pid = person['id']
+                team = person.get('currentTeam', {})
+                position = person.get('primaryPosition', {}).get('name', 'Unknown')
+
+                team_name = team.get('name', 'Unknown')
+                team_id = team.get('id', None)
+
+                person_team_map[pid] = {
+                    'team': team_name,
+                    'team_id': team_id,
+                    'position': position
+                }
+
+                if team_id:
+                    team_ids.add(team_id)
+
+        except Exception as e:
+            print(f"Person batch {i+1} failed: {e}")
+
+    # Step 2: Fetch team level info by unique team IDs
+    team_level_map = {}
+
+    for team_id in team_ids:
+        try:
+            url_team = f"https://statsapi.mlb.com/api/v1/teams/{team_id}"
+            team_data = requests.get(url_team, timeout=3).json()
+
+            if 'teams' in team_data and team_data['teams']:
+                sport_name = team_data['teams'][0].get('sport', {}).get('name', 'Unknown')
+                team_level_map[team_id] = sport_name
+        except Exception as e:
+            print(f"Team fetch failed for team_id {team_id}: {e}")
+            team_level_map[team_id] = 'Unknown'
+
+    # Step 3: Assign everything back to the DataFrame
+    for idx, row in df.iterrows():
+        pid = int(row['key_mlbam'])
+        info = person_team_map.get(pid, {})
+        team_id = info.get('team_id')
+
+        df.at[idx, 'team'] = info.get('team', 'Unknown')
+        df.at[idx, 'position'] = info.get('position', 'Unknown')
+        df.at[idx, 'team_level'] = team_level_map.get(team_id, 'Unknown')
+
+    return df
+
+
+# %%
+df_enriched = enrich_chadwick(df_chadwick_2025)
+
+df_enriched['team_level'] = df_enriched['team_level'].replace({
+    'Major League Baseball': 'MLB',
+    'Triple-A': 'AAA',
+    'Double-A': 'AA',
+    'High-A': 'A+',
+    'Single-A': 'A',
+})
+
+# Sort the DataFrame by last name
+df_enriched= df_enriched.sort_values('name_last')
+
+# Only keep players listed as pitchers
+df_pitchers = df_enriched[df_enriched['position'].str.contains("Pitcher", na=False)]
+
+# %%
+import io
+import base64
+from dash import Dash, html, dcc, Output, Input
+
+# Generate dropdown options using the cleaned `df_pitchers`
+dropdown_pitcher_options = [
     {'label': row['full_name'], 'value': int(row['key_mlbam'])}
-    for _, row in df_chadwick_2025.iterrows()
+    for _, row in df_pitchers.iterrows()
+]
+
+# Generate team options based on the `team` column
+dropdown_team_options = [
+    {'label': team, 'value': team}
+    for team in df_pitchers['team'].unique()
+]
+
+# Generate team level options based on the `team_level` column
+dropdown_level_options = [
+    {'label': level, 'value': level}
+    for level in df_pitchers['team_level'].unique()
 ]
 
 # Your dashboard figure generation function
@@ -1174,35 +1206,92 @@ def get_dashboard_image(pitcher_id, stats):
 app = Dash(__name__)
 stats = ['G', 'GS', 'IP', 'TBF', 'WHIP', 'ERA', 'FIP', 'K%', 'BB%', 'GB%']
 
-# Layout with dropdown and image
+# Layout with dropdowns and image
 app.layout = html.Div([
-    html.H1("2025 MLB Pitching Dashboard", style={'textAlign': 'center'}),
-    dcc.Dropdown(
-        id='pitcher-dropdown',
-        options=dropdown_options,  # The options from the filtered Chadwick data
-        value=dropdown_options[0]['value'],  # Default value is the first player's MLB ID
-        placeholder='Select a pitcher',
-        style={'width': '50%', 'margin': 'auto'}
-    ),
-    html.Img(id='dashboard-img', style={'width': '100%', 'maxWidth': '1600px'}),
+    html.H1("2025 MLB Season Pitching Dashboard", style={'textAlign': 'center'}),
 
-    # Add Interval to auto-refresh the data every 24 hours (in milliseconds)
-    dcc.Interval(
-        id='data-update-interval',
-        interval=24 * 60 * 60 * 1000,  # 24 hours in milliseconds
-        n_intervals=0
-    )
-])
+    html.Div([
+        dcc.Dropdown(id='level-dropdown', placeholder='Select a level', style={'flex': 1}),
+        dcc.Dropdown(id='team-dropdown', placeholder='Select a team', style={'flex': 1}),
+        dcc.Dropdown(id='pitcher-dropdown', placeholder='Select a pitcher', style={'flex': 1}),
+    ], style={
+        'display': 'flex',
+        'justifyContent': 'center',
+        'alignItems': 'center',
+        'gap': '2%',
+        'maxWidth': '100%',
+        'margin': '0 auto',
+        'padding': '10px 0'
+    }),
 
-# Callback to update the dashboard image based on the selected pitcher
+    html.Div([
+        dcc.Loading(
+            id="loading-spinner",
+            type="circle",
+            children=html.Img(id='dashboard-img', style={'width': '100%', 'maxWidth': '1600px'}),
+            fullscreen=False
+        )
+    ], style={
+        'textAlign': 'center',
+        'margin': '0 auto'
+    }),
+
+    dcc.Interval(id='data-update-interval', interval=24 * 60 * 60 * 1000, n_intervals=0)
+
+], style={
+    'maxWidth': '1800px',
+    'margin': '0 auto',
+    'padding': '20px'
+})
+
+from dash.dependencies import Output, Input
+
+# Unique level options
+@app.callback(
+    Output('level-dropdown', 'options'),
+    Input('data-update-interval', 'n_intervals')
+)
+def populate_levels(_):
+    levels = sorted(df_pitchers['team_level'].dropna().unique())
+    return [{'label': lvl, 'value': lvl} for lvl in levels]
+
+# Teams filtered by selected level
+@app.callback(
+    Output('team-dropdown', 'options'),
+    Input('level-dropdown', 'value')
+)
+def update_teams(selected_level):
+    if not selected_level:
+        return []
+    teams = df_pitchers[df_pitchers['team_level'] == selected_level]['team'].dropna().unique()
+    return [{'label': team, 'value': team} for team in sorted(teams)]
+
+# Pitchers filtered by selected team
+@app.callback(
+    Output('pitcher-dropdown', 'options'),
+    Input('team-dropdown', 'value')
+)
+def update_pitchers(selected_team):
+    if not selected_team:
+        return []
+    pitchers = df_pitchers[df_pitchers['team'] == selected_team]
+    return [
+        {'label': row['full_name'], 'value': int(row['key_mlbam'])}
+        for _, row in pitchers.iterrows()
+    ]
+
 @app.callback(
     Output('dashboard-img', 'src'),
     Input('pitcher-dropdown', 'value')
 )
 def update_dashboard_image(pitcher_id):
-    # Fetch and return the updated image for the selected pitcher
+    if pitcher_id is None:
+        return None
     return get_dashboard_image(pitcher_id, stats)
 
-if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=8050)
-    
+# Run the app
+if __name__ == '__main__':
+    app.run(debug=True)
+
+
+
